@@ -244,20 +244,6 @@ This API is deployed on Render.com. To deploy your own instance:
    ```
 5. Deploy the service
 
-## Common Issues and Solutions
-
-1. Invalid Token
-   - Token expired (24h limit)
-   - Solution: Login again for new token
-
-2. Authorization Format
-   - Must include "Bearer " prefix
-   - Correct: `Bearer eyJhbGciOiJIUzI1...`
-
-3. Swagger Server Selection
-   - Use the server dropdown in Swagger UI to switch between production and local environments
-   - Ensure you're using the correct server URL for your tests
-
 ## Technologies Used
 
 - Node.js
