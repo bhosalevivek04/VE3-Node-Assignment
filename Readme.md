@@ -2,6 +2,10 @@
 
 A RESTful API for task management with user authentication, built using Node.js, Express, and MongoDB.
 
+## Live Demo
+API URL: https://ve3-node-assignment.onrender.com
+Swagger Documentation: https://ve3-node-assignment.onrender.com/api-docs
+
 ## Features
 
 - Task CRUD operations with pagination
@@ -44,7 +48,9 @@ npm start
 
 ## API Documentation
 
-Access the Swagger documentation at: `http://localhost:3000/api-docs`
+Access the Swagger documentation at:
+- Production: `https://ve3-node-assignment.onrender.com/api-docs`
+- Local: `http://localhost:3000/api-docs`
 
 ### API Endpoints
 
@@ -96,59 +102,11 @@ All task endpoints require a Bearer token in the Authorization header:
 Authorization: Bearer <your_jwt_token>
 ```
 
-## Technologies Used
-
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT (JSON Web Tokens)
-- Swagger UI Express
-- bcrypt for password hashing
-
-## Error Handling
-
-The API includes comprehensive error handling for:
-- Invalid authentication
-- Missing or expired tokens
-- Invalid input validation
-- Resource not found
-- Server errors
-
-## Response Codes
-
-- 200: Success
-- 201: Created
-- 204: No Content
-- 400: Bad Request
-- 401: Unauthorized
-- 404: Not Found
-- 500: Server Error
-
-## Data Models
-
-### User Model
-```json
-{
-  "username": "string (required, unique)",
-  "password": "string (required, hashed)"
-}
-```
-
-### Task Model
-```json
-{
-  "title": "string (required)",
-  "description": "string",
-  "status": "string (enum: ['pending', 'completed'])",
-}
-```
-
 ## Swagger API Testing Guide
 
 ### 1. Accessing Swagger UI
-- Navigate to `http://localhost:3000/api-docs`
-- You'll see all available endpoints with documentation
+- Production: `https://ve3-node-assignment.onrender.com/api-docs`
+- Local: `http://localhost:3000/api-docs`
 
 ### 2. Authentication Testing
 
@@ -180,7 +138,7 @@ The API includes comprehensive error handling for:
 
 ### 3. Authorize Swagger
 1. Click the "Authorize" button (🔓) at the top
-2. Enter token format: `Bearer your-token-here` //here only token you need to add
+2. Enter token format: `Bearer your-token-here`
 3. Click "Authorize"
 4. Click "Close"
 
@@ -271,7 +229,22 @@ Error Handling:
 - [ ] Non-existent resources
 - [ ] Pagination limits
 
-### Common Issues and Solutions
+## Deployment
+
+This API is deployed on Render.com. To deploy your own instance:
+
+1. Fork this repository
+2. Create a new Web Service on Render
+3. Connect your GitHub repository
+4. Configure environment variables:
+   ```
+   DATABASE_URL=your_mongodb_atlas_url
+   JWT_SECRET=your_jwt_secret
+   PORT=3000
+   ```
+5. Deploy the service
+
+## Common Issues and Solutions
 
 1. Invalid Token
    - Token expired (24h limit)
@@ -281,6 +254,57 @@ Error Handling:
    - Must include "Bearer " prefix
    - Correct: `Bearer eyJhbGciOiJIUzI1...`
 
+3. Swagger Server Selection
+   - Use the server dropdown in Swagger UI to switch between production and local environments
+   - Ensure you're using the correct server URL for your tests
+
+## Technologies Used
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT (JSON Web Tokens)
+- Swagger UI Express
+- bcrypt for password hashing
+
+## Error Handling
+
+The API includes comprehensive error handling for:
+- Invalid authentication
+- Missing or expired tokens
+- Invalid input validation
+- Resource not found
+- Server errors
+
+## Response Codes
+
+- 200: Success
+- 201: Created
+- 204: No Content
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Server Error
+
+## Data Models
+
+### User Model
+```json
+{
+  "username": "string (required, unique)",
+  "password": "string (required, hashed)"
+}
+```
+
+### Task Model
+```json
+{
+  "title": "string (required)",
+  "description": "string",
+  "status": "string (enum: ['pending', 'completed'])",
+}
+```
 3. Pagination
    - Default: page=1, limit=10
    - Max limit: 100 items per page
