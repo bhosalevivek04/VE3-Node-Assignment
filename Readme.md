@@ -138,7 +138,7 @@ Authorization: Bearer <your_jwt_token>
 
 ### 3. Authorize Swagger
 1. Click the "Authorize" button (🔓) at the top
-2. Enter token format: `Bearer your-token-here`
+2. Enter token format: `Bearer your-token-here` //here you need to enter token only
 3. Click "Authorize"
 4. Click "Close"
 
