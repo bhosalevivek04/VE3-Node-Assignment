@@ -10,6 +10,10 @@ const options = {
     },
     servers: [
       {
+        url: 'https://ve3-node-assignment.onrender.com/api',
+        description: 'Production server',
+      },
+      {
         url: 'http://localhost:3000/api',
         description: 'Development server',
       },
