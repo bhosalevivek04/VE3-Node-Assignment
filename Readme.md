@@ -4,11 +4,12 @@ A RESTful API for task management with user authentication, built using Node.js,
 
 ## Features
 
-- Task CRUD operations
-- User authentication using JWT
+- Task CRUD operations with pagination
+- User authentication using JWT (24-hour token validity)
 - API documentation using Swagger
 - MongoDB database with Mongoose ORM
 - Error handling and input validation
+- Secure route protection with JWT middleware
 
 ## Prerequisites
 
@@ -49,14 +50,51 @@ Access the Swagger documentation at: `http://localhost:3000/api-docs`
 
 #### Authentication
 - POST /api/auth/register - Register a new user
+  ```json
+  {
+    "username": "your_username",
+    "password": "your_password"
+  }
+  ```
 - POST /api/auth/login - Login user
+  ```json
+  {
+    "username": "your_username",
+    "password": "your_password"
+  }
+  ```
 
 #### Tasks
-- GET /api/tasks - Get all tasks
+- GET /api/tasks - Get all tasks (with pagination)
+  - Query parameters:
+    - page (default: 1)
+    - limit (default: 10)
+  - Returns:
+    ```json
+    {
+      "tasks": [],
+      "currentPage": 1,
+      "totalPages": 1,
+      "totalTasks": 0
+    }
+    ```
 - GET /api/tasks/:id - Get task by ID
 - POST /api/tasks - Create new task
+  ```json
+  {
+    "title": "Task title",
+    "description": "Task description",
+    "status": "pending"
+  }
+  ```
 - PUT /api/tasks/:id - Update task
 - DELETE /api/tasks/:id - Delete task
+
+### Authentication
+All task endpoints require a Bearer token in the Authorization header:
+```
+Authorization: Bearer <your_jwt_token>
+```
 
 ## Technologies Used
 
@@ -64,5 +102,185 @@ Access the Swagger documentation at: `http://localhost:3000/api-docs`
 - Express.js
 - MongoDB
 - Mongoose
-- JWT
-- Swagger UI
+- JWT (JSON Web Tokens)
+- Swagger UI Express
+- bcrypt for password hashing
+
+## Error Handling
+
+The API includes comprehensive error handling for:
+- Invalid authentication
+- Missing or expired tokens
+- Invalid input validation
+- Resource not found
+- Server errors
+
+## Response Codes
+
+- 200: Success
+- 201: Created
+- 204: No Content
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Server Error
+
+## Data Models
+
+### User Model
+```json
+{
+  "username": "string (required, unique)",
+  "password": "string (required, hashed)"
+}
+```
+
+### Task Model
+```json
+{
+  "title": "string (required)",
+  "description": "string",
+  "status": "string (enum: ['pending', 'completed'])",
+}
+```
+
+## Swagger API Testing Guide
+
+### 1. Accessing Swagger UI
+- Navigate to `http://localhost:3000/api-docs`
+- You'll see all available endpoints with documentation
+
+### 2. Authentication Testing
+
+#### Register User
+1. Expand the `/auth/register` endpoint
+2. Click "Try it out"
+3. Enter test data:
+```json
+{
+  "username": "testuser1",
+  "password": "password123"
+}
+```
+4. Click "Execute"
+5. Verify 201 response with success message
+
+#### Login User
+1. Expand the `/auth/login` endpoint
+2. Click "Try it out"
+3. Enter credentials:
+```json
+{
+  "username": "testuser1",
+  "password": "password123"
+}
+```
+4. Click "Execute"
+5. Copy the JWT token from response
+
+### 3. Authorize Swagger
+1. Click the "Authorize" button (🔓) at the top
+2. Enter token format: `Bearer your-token-here` //here only token you need to add
+3. Click "Authorize"
+4. Click "Close"
+
+### 4. Testing Task Endpoints
+
+#### Create Task (POST /tasks)
+1. Expand POST `/tasks`
+2. Click "Try it out"
+3. Enter task data:
+```json
+{
+  "title": "Test Task",
+  "description": "Testing task creation",
+  "status": "pending"
+}
+```
+4. Execute and verify 201 response
+
+#### Get All Tasks (GET /tasks)
+1. Expand GET `/tasks`
+2. Click "Try it out"
+3. Test pagination:
+   - page: 1
+   - limit: 10
+4. Execute and verify pagination works
+
+#### Get Single Task (GET /tasks/{id})
+1. Expand GET `/tasks/{id}`
+2. Enter task ID from create response
+3. Execute and verify task details
+
+#### Update Task (PUT /tasks/{id})
+1. Expand PUT `/tasks/{id}`
+2. Enter task ID
+3. Update data:
+```json
+{
+  "title": "Updated Task",
+  "status": "completed"
+}
+```
+4. Execute and verify changes
+
+#### Delete Task (DELETE /tasks/{id})
+1. Expand DELETE `/tasks/{id}`
+2. Enter task ID
+3. Execute and verify 204 response
+
+### 5. Error Testing Scenarios
+
+#### Authentication Errors
+1. Test without token:
+   - Remove authorization
+   - Try any task endpoint
+   - Verify 401 Unauthorized
+
+#### Invalid Input
+1. Create task without title:
+```json
+{
+  "description": "Missing title"
+}
+```
+2. Verify 400 Bad Request
+
+#### Non-existent Resources
+1. Try GET /tasks with invalid ID
+2. Verify 404 Not Found
+
+### 6. Testing Checklist
+
+Authentication:
+- [ ] Register new user
+- [ ] Login successfully
+- [ ] Get valid JWT token
+- [ ] Authorize Swagger UI
+
+Task Operations:
+- [ ] Create new task
+- [ ] Get all tasks with pagination
+- [ ] Get single task
+- [ ] Update task
+- [ ] Delete task
+
+Error Handling:
+- [ ] Unauthorized access
+- [ ] Invalid input
+- [ ] Non-existent resources
+- [ ] Pagination limits
+
+### Common Issues and Solutions
+
+1. Invalid Token
+   - Token expired (24h limit)
+   - Solution: Login again for new token
+
+2. Authorization Format
+   - Must include "Bearer " prefix
+   - Correct: `Bearer eyJhbGciOiJIUzI1...`
+
+3. Pagination
+   - Default: page=1, limit=10
+   - Max limit: 100 items per page
