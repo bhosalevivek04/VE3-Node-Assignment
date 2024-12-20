@@ -2,8 +2,22 @@ const Task = require('../models/Task');
 
 exports.getAllTasks = async (req, res) => {
   try {
-    const tasks = await Task.find();
-    res.json(tasks);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const tasks = await Task.find()
+      .skip(skip)
+      .limit(limit);
+    
+    const total = await Task.countDocuments();
+
+    res.json({
+      tasks,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalTasks: total
+    });
   } catch (error) {
     res.status(500).json({ error: 'Server Error' });
   }
